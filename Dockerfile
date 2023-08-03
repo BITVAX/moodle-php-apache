@@ -34,13 +34,13 @@ ADD root/tmp/setup/php-extensions.sh /tmp/setup/php-extensions.sh
 RUN /tmp/setup/php-extensions.sh
 
 # Install Oracle Instantclient
-ADD root/tmp/setup/oci8-extension.sh /tmp/setup/oci8-extension.sh
-RUN /tmp/setup/oci8-extension.sh
-ENV LD_LIBRARY_PATH /usr/local/instantclient
+#ADD root/tmp/setup/oci8-extension.sh /tmp/setup/oci8-extension.sh
+#RUN /tmp/setup/oci8-extension.sh
+#ENV LD_LIBRARY_PATH /usr/local/instantclient
 
 # Install Microsoft sqlsrv.
-ADD root/tmp/setup/sqlsrv-extension.sh /tmp/setup/sqlsrv-extension.sh
-RUN /tmp/setup/sqlsrv-extension.sh
+#ADD root/tmp/setup/sqlsrv-extension.sh /tmp/setup/sqlsrv-extension.sh
+#RUN /tmp/setup/sqlsrv-extension.sh
 
 RUN mkdir /var/www/moodledata && chown www-data /var/www/moodledata && \
     mkdir /var/www/phpunitdata && chown www-data /var/www/phpunitdata && \
@@ -53,6 +53,11 @@ ADD root/usr /usr
 
 # Fix the original permissions of /tmp, the PHP default upload tmp dir.
 RUN chmod 777 /tmp && chmod +t /tmp
+
+ENV APACHE_DOCUMENT_ROOT /var/www/html
+
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 CMD ["apache2-foreground"]
 ENTRYPOINT ["moodle-docker-php-entrypoint"]

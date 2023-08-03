@@ -32,7 +32,8 @@ apt-get install -y --no-install-recommends apt-transport-https \
     $PACKAGES_MYMARIA \
     $PACKAGES_RUNTIME \
     $PACKAGES_MEMCACHED \
-    $PACKAGES_LDAP
+    $PACKAGES_LDAP \
+    libtidy-dev
 
 echo "Installing php extensions"
 
@@ -47,7 +48,8 @@ docker-php-ext-install -j$(nproc) \
     opcache \
     pgsql \
     soap \
-    xsl
+    xsl \
+    tidy
 
 # GD.
 docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
